@@ -64,7 +64,7 @@ pipeline {
             container('helm') {
                 script {
                     sh "helm lint ./${HELM_CHART_DIRECTORY}"
-                    sh "helm upgrade --wait --timeout 60 --set image.tag=${version} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}"		
+                    sh "helm upgrade --set image.tag=${version} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}"		
                 }
             }
           }
