@@ -23,6 +23,8 @@ pipeline {
     }
     
     environment {
+        HELM_APP_NAME = 'test1'
+        HELM_CHART_DIRECTORY = "k8s/nodejs-k9s-cicd"
         DOCKER_IMAGE_NAME = "${imageGroup}/${appName}"
     }
 
@@ -51,6 +53,18 @@ pipeline {
                     }
     
                     sh "docker rmi ${DOCKER_IMAGE_NAME}:${version} -f"				
+                }
+            }
+          }
+        }
+        stage('Build helm') 
+        {
+          steps 
+          {
+            container('helm') {
+                script {
+                    sh "helm lint ./${HELM_CHART_DIRECTORY}"
+                    sh "helm upgrade --wait --timeout 60 --set image.tag=${version} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}"		
                 }
             }
           }
