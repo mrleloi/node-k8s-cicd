@@ -24,7 +24,7 @@ pipeline {
     
     environment {
         HELM_APP_NAME = 'test1'
-        HELM_CHART_DIRECTORY = "k8s/nodejs-k9s-cicd"
+        HELM_CHART_DIRECTORY = "k8s/nodejs-k8s-cicd"
         DOCKER_IMAGE_NAME = "${imageGroup}/${appName}"
     }
 
