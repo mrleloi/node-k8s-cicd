@@ -69,7 +69,7 @@ pipeline {
             withCredentials([usernamePassword(credentialsId: 'github_mrleloi', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh """#!/bin/bash
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-                   git clone ${gitRepositoryConfig} --branch ${gitBranchConfig}
+                   git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl} --branch ${gitBranchConfig}
                    cd ${helmRepo}
                    sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
                    git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl}
