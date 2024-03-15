@@ -66,7 +66,7 @@ pipeline {
         {
           steps 
           {
-            withCredentials([usernamePassword(credentialsId: ${githubCredential}, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            withCredentials([usernamePassword(credentialsId: 'github_mrleloi', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh """#!/bin/bash
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
                    git clone ${gitRepositoryConfig} --branch ${gitBranchConfig}
