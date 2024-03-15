@@ -74,7 +74,7 @@ pipeline {
                    git clone ${gitRepositoryConfig} --branch ${gitBranchConfig}
                    cd ${helmRepo}
                    sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
-                   git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl}
+                   git add . ; git commit -m "Update to version ${version}";git push -f origin master
                    cd ..
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
                    """
