@@ -66,15 +66,19 @@ pipeline {
         {
           steps 
           {
+            withCredentials([usernamePassword(credentialsId: 'github_mrleloi', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh """#!/bin/bash
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-                   git clone https://mrleloi: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@${gitRepositoryConfigPushUrl} --branch ${gitBranchConfig}
+                   git config --global user.email "ledinhloi1997@gmail.com"
+                   git config --global user.name "mrleloi"
+                   git clone ${gitRepositoryConfig} --branch ${gitBranchConfig}
                    cd ${helmRepo}
                    sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
-                   git add . ; git commit -m "Update to version ${version}";git push -f origin master
+                   git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl}
                    cd ..
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
                    """
+            }
           }
         }
     }
