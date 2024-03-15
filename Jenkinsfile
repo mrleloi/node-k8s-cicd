@@ -4,7 +4,7 @@ def gitBranch = 'master'
 
 def gitRepositoryConfig = 'https://github.com/mrleloi/node-k8s-cicd-helmconfig.git'
 def gitRepositoryConfigPushUrl = 'github.com/mrleloi/node-k8s-cicd-helmconfig.git'
-def gitBranchConfig = 'main'
+def gitBranchConfig = 'master'
 def helmRepo = "node-k8s-cicd-helmconfig"
 def helmChart = "node-k8s-cicd"
 def helmValueFile = "values.yaml"
@@ -66,17 +66,15 @@ pipeline {
         {
           steps 
           {
-            withCredentials([usernamePassword(credentialsId: 'github_mrleloi', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh """#!/bin/bash
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-                   git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl} --branch ${gitBranchConfig}
+                   git clone https://mrleloi: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@${gitRepositoryConfigPushUrl} --branch ${gitBranchConfig}
                    cd ${helmRepo}
                    sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
-                   git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl}
+                   git add . ; git commit -m "Update to version ${version}";git push -f origin master
                    cd ..
                    [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-                   """	
-            }
+                   """
           }
         }
     }
