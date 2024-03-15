@@ -2,6 +2,13 @@
 def gitRepository = 'https://github.com/mrleloi/node-k8s-cicd.git'
 def gitBranch = 'master'
 
+def gitRepositoryConfig = 'https://github.com/mrleloi/node-k8s-cicd-helmconfig.git'
+def gitRepositoryConfigPushUrl = 'github.com/mrleloi/node-k8s-cicd-helmconfig.git'
+def gitBranchConfig = 'main'
+def helmRepo = "node-k8s-cicd"
+def helmChart = "node-k8s-cicd"
+def helmValueFile = "values.yaml"
+
 // Image infor in registry
 def imageGroup = 'leloimr'
 def appName = "node-k8s-cicd"
@@ -23,8 +30,6 @@ pipeline {
     }
     
     environment {
-        HELM_APP_NAME = 'test1'
-        HELM_CHART_DIRECTORY = "k8s/nodejs-k8s-cicd"
         DOCKER_IMAGE_NAME = "${imageGroup}/${appName}"
     }
 
@@ -61,11 +66,16 @@ pipeline {
         {
           steps 
           {
-            container('helm') {
-                script {
-                    sh "helm lint ./${HELM_CHART_DIRECTORY}"
-                    sh "helm upgrade --set image.tag=${version} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}"		
-                }
+            withCredentials([usernamePassword(credentialsId: 'githubCredential', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            sh """#!/bin/bash
+                   [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+                   git clone ${gitRepositoryConfig} --branch ${gitBranchConfig}
+                   cd ${helmRepo}
+                   sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
+                   git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${gitRepositoryConfigPushUrl}
+                   cd ..
+                   [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+                   """	
             }
           }
         }
