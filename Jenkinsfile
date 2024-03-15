@@ -5,7 +5,7 @@ def gitBranch = 'master'
 def gitRepositoryConfig = 'https://github.com/mrleloi/node-k8s-cicd-helmconfig.git'
 def gitRepositoryConfigPushUrl = 'github.com/mrleloi/node-k8s-cicd-helmconfig.git'
 def gitBranchConfig = 'main'
-def helmRepo = "node-k8s-cicd"
+def helmRepo = "node-k8s-cicd-helmconfig"
 def helmChart = "node-k8s-cicd"
 def helmValueFile = "values.yaml"
 
